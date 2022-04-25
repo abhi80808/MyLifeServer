@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const body_parser = require('body-parser');
-const User = require('./src/models/User');
+const authRoutes = require('./src/controllers/auth');
 
 const app = express();
 
@@ -21,14 +21,7 @@ var corsOptions = {
 
 app.use(cors(corsOptions));
 
-app.post("/user", async (req, res) => {
-    const user = new User(req.body);
-    await user.save().then((data) => {
-        return res.status(201).send(data);
-    }).catch((err) => {
-        return res.status(422).send(err);
-    });
-})
+app.use("/", authRoutes);
 
 app.get("*", (req, res) => {
     res.status(404).send("Error 404! not found");
