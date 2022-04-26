@@ -15,7 +15,7 @@ mongoose
     })
 
 var corsOptions = {
-    origin: ['http://localhost:3000', 'http://172.16.58.153:3000'],
+    origin: ['http://localhost:2500', 'http://172.16.58.153:2500'],
     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 }
 
@@ -43,6 +43,6 @@ app.patch("*", (req, res) => {
     res.status(404).send("Error 404! not found");
 });
 
-app.listen(8080, () => {
+app.listen(2600, () => {
     console.log("server is up and running on port 8080");
 });
