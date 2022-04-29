@@ -2,7 +2,9 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const body_parser = require('body-parser');
+
 const authRoutes = require('./src/controllers/auth');
+const fundRoutes = require('./src/controllers/fund');
 
 const app = express();
 
@@ -22,6 +24,7 @@ var corsOptions = {
 app.use(cors(corsOptions));
 
 app.use("/", authRoutes);
+app.use("/", fundRoutes);
 
 app.get("*", (req, res) => {
     res.status(404).send("Error 404! not found");
@@ -44,5 +47,5 @@ app.patch("*", (req, res) => {
 });
 
 app.listen(2600, () => {
-    console.log("server is up and running on port 8080");
+    console.log("server is up and running on port 2600");
 });

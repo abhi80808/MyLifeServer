@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const CounterModel = require('./Counter');
+const CounterModel = require('./counters/UserCounter');
 
 const UserSchema = new Schema({
     id: {
@@ -32,6 +32,10 @@ const UserSchema = new Schema({
         type: String,
         required: true
     },
+    finance: {
+        type: Schema.Types.ObjectId,
+        ref: 'Finance'
+    }
 }, {timestamps: {createdAt: 'createdAt', updatedAt: 'updatedAt'}});
 
 UserSchema.pre('save', async function() {
