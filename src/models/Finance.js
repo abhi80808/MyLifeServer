@@ -28,4 +28,4 @@ FundSchema.methods.toJSON = function() {
     return obj;
    }
 
-module.exports = mongoose.model("Fund", FundSchema);
+module.exports = mongoose.model("Finance", FundSchema);
