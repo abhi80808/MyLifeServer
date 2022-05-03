@@ -17,7 +17,7 @@ mongoose
     })
 
 var corsOptions = {
-    origin: ['http://localhost:2500', 'http://172.16.58.153:2500'],
+    origin: ['http://localhost:2500', 'http://172.16.58.76:2500'],
     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 }
 

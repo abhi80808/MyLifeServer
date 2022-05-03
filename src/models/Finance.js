@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const CounterModel = require('./counters/FinanceCounter');
 
-const FundSchema = new Schema({
+const FinanceSchema = new Schema({
     id: {
         type: Number,
         unique: true
@@ -13,7 +13,7 @@ const FundSchema = new Schema({
     }]
 }, {timestamps: {createdAt: 'createdAt', updatedAt: 'updatedAt'}});
 
-FundSchema.pre('save', async function() {
+FinanceSchema.pre('save', async function() {
     // Don't increment if this is NOT a newly created document
     if(!this.isNew) return;
 
@@ -21,11 +21,11 @@ FundSchema.pre('save', async function() {
     this.id = id;
 });
 
-FundSchema.methods.toJSON = function() {
+FinanceSchema.methods.toJSON = function() {
     var obj = this.toObject();
     delete obj._id;
     delete obj.__v;
     return obj;
    }
 
-module.exports = mongoose.model("Finance", FundSchema);
+module.exports = mongoose.model("Finance", FinanceSchema);

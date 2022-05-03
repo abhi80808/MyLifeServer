@@ -8,8 +8,8 @@ router.get("/net-worth", verifyToken, async (req, res, next) => {
     const funds = req.finance.funds;
     let net_worth = 0
     funds.forEach(fund => net_worth += fund.balance);
-    return res.status(200).json({net_worth});
-})
+    return res.status(200).json({net_worth, funds});
+});
 
 router.post("/fund/storage/create", verifyToken, async (req, res, next) => {
     const fundStorage = new FundStorage(req.body);

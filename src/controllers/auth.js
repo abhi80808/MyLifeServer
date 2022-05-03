@@ -3,8 +3,13 @@ const User = require('../models/User');
 const Finance = require('../models/Finance');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+const verifyToken = require('../middleware/auth');
 
 const router = express.Router();
+
+router.get("/me", verifyToken, async (req, res, next) => {
+    return res.status(200).send(req.user);
+})
 
 router.post("/signup", async (req, res) => {
     const userData = req.body;
