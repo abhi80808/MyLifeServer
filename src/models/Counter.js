@@ -21,4 +21,4 @@ CounterSchema.static('increment', async function(counterName) {
     return count.seq;
 });
 
-module.exports = mongoose.model('FinanceCounter', CounterSchema);
+module.exports = mongoose.model('Counter', CounterSchema);

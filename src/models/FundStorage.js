@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const CounterModel = require('./counters/FundStorageCounter');
+const CounterModel = require('./Counter');
 
 const FundStorageSchema = new Schema({
     id: {
@@ -26,7 +26,7 @@ FundStorageSchema.pre('save', async function() {
     // Don't increment if this is NOT a newly created document
     if(!this.isNew) return;
 
-    const id = await CounterModel.increment('entity');
+    const id = await CounterModel.increment('FundStorage');
     this.id = id;
 });
 

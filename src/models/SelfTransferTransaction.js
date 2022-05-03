@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const CounterModel = require('./counters/SelfTransferTransactionCounter');
+const CounterModel = require('./Counter');
 
 const SelfTransferTransaction = new Schema({
     id: {
@@ -27,7 +27,7 @@ SelfTransferTransaction.pre('save', async function() {
     // Don't increment if this is NOT a newly created document
     if(!this.isNew) return;
 
-    const id = await CounterModel.increment('entity');
+    const id = await CounterModel.increment('SelfTransferTransaction');
     this.id = id;
 });
 

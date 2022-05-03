@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const CounterModel = require('./counters/UserCounter');
+const CounterModel = require('./Counter');
 
 const UserSchema = new Schema({
     id: {
@@ -35,6 +35,10 @@ const UserSchema = new Schema({
     finance: {
         type: Schema.Types.ObjectId,
         ref: 'Finance'
+    },
+    dailyTask: {
+        type: Schema.Types.ObjectId,
+
     }
 }, {timestamps: {createdAt: 'createdAt', updatedAt: 'updatedAt'}});
 
@@ -42,7 +46,7 @@ UserSchema.pre('save', async function() {
     // Don't increment if this is NOT a newly created document
     if(!this.isNew) return;
 
-    const id = await CounterModel.increment('entity');
+    const id = await CounterModel.increment('User');
     this.id = id;
 });
 
