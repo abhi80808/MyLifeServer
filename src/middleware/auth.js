@@ -15,7 +15,10 @@ module.exports = verifyToken = async (req, res, next) => {
         }
     }).then(async (user) => {
         req.user = user;
-        req.finance = await Finance.findOne({_id: req.user.finance._id}).populate('funds');
+        req.finance = await Finance.findOne({_id: req.user.finance._id}).populate([{
+            path: "funds",
+            select: "-__v"
+        }, {path: "selfTransferLog", select: "-__v"}]);
     });
     next();
 }

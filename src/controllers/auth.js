@@ -4,6 +4,7 @@ const Finance = require('../models/Finance');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const verifyToken = require('../middleware/auth');
+const SelfTransferLog = require('../models/SelfTransferLog');
 
 const router = express.Router();
 
@@ -16,19 +17,22 @@ router.post("/signup", async (req, res) => {
     bcrypt.genSalt(10, (err, salt) => {
         bcrypt.hash(userData['password'], salt, async (err, hash) => {
             userData['password'] = hash;
-            const finance = new Finance();
-            finance.save().then(async (data) => {
-                const user = new User({
-                    ...userData,
-                    finance: data._id
-                });
-                await user.save().then((data) => {
-                    return res.status(201).send(data);
+            const selfTransferLog = new SelfTransferLog();
+            await selfTransferLog.save().then(async (data) => {
+                const finance = new Finance({ selfTransferLog });
+                await finance.save().then(async (data) => {
+                    const user = new User({
+                        ...userData,
+                        finance: data._id
+                    });
+                    await user.save().then((data) => {
+                        return res.status(201).send(data);
+                    }).catch((err) => {
+                        return res.status(422).send(err);
+                    });
                 }).catch((err) => {
-                    return res.status(422).send(err);
+                    return res.status(422).json(err);
                 });
-            }).catch((err) => {
-                return res.status(422).json(err);
             });
         });
     });

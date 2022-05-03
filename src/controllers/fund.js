@@ -1,6 +1,7 @@
 const express = require('express');
 const FundStorage = require('../models/FundStorage');
 const verifyToken = require('../middleware/auth');
+const SelfTransferTransaction = require('../models/SelfTransferTransaction');
 
 const router = express.Router();
 
@@ -28,6 +29,7 @@ router.post("/fund/storage/create", verifyToken, async (req, res, next) => {
 router.put("/fund/selftransfer", verifyToken, async (req, res, next) => {
     const {transferFromId, transferToId, amount} = req.body;
     if(transferFromId === transferToId) return res.status(422).json({message: "Choose different account to transfer to"});
+    const selfTransferLog = req.finance.selfTransferLog;
     const funds = req.finance.funds;
     let transferFrom={}, transferTo={};
     for(let f of funds) {
@@ -36,9 +38,15 @@ router.put("/fund/selftransfer", verifyToken, async (req, res, next) => {
     }
     transferFrom.balance -= amount;
     transferTo.balance += amount;
-    transferFrom.save().then((data) => {
-        transferTo.save().then((data) => {
-            return res.status(200).json({message: "Transfer successful"});
+    await transferFrom.save().then(async (transferFromData) => {
+        await transferTo.save().then(async (transferToData) => {
+            const selfTransferTransaction = new SelfTransferTransaction({transferFrom: transferFromData._id, transferTo: transferToData._id, amount});
+            await selfTransferTransaction.save().then(async (selfTransferTransactionData) => {
+                selfTransferLog.log.push(selfTransferTransactionData._id);
+                await selfTransferLog.save().then(() => {
+                    return res.status(200).json({message: "Transfer successful"});
+                });
+            });
         });
     });
 })

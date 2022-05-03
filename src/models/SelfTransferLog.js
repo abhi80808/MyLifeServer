@@ -1,23 +1,21 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const CounterModel = require('./counters/FinanceCounter');
+const CounterModel = require('./counters/SelfTransferLogCounter');
 
-const FinanceSchema = new Schema({
+const SelfTransferLog = new Schema({
     id: {
         type: Number,
         unique: true
     },
-    funds: [{
-        type: Schema.Types.ObjectId,
-        ref: 'FundStorage'
-    }],
-    selfTransferLog: {
-        type: Schema.Types.ObjectId,
-        ref: 'SelfTransferLog'
-    }
+    log: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: "SelfTransferTransaction"
+        }
+    ]
 }, {timestamps: {createdAt: 'createdAt', updatedAt: 'updatedAt'}});
 
-FinanceSchema.pre('save', async function() {
+SelfTransferLog.pre('save', async function() {
     // Don't increment if this is NOT a newly created document
     if(!this.isNew) return;
 
@@ -25,11 +23,11 @@ FinanceSchema.pre('save', async function() {
     this.id = id;
 });
 
-FinanceSchema.methods.toJSON = function() {
+SelfTransferLog.methods.toJSON = function() {
     var obj = this.toObject();
     delete obj._id;
     delete obj.__v;
     return obj;
    }
 
-module.exports = mongoose.model("Finance", FinanceSchema);
+module.exports = mongoose.model("SelfTransferLog", SelfTransferLog);
