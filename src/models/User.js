@@ -36,9 +36,9 @@ const UserSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Finance'
     },
-    dailyTask: {
+    dayManagement: {
         type: Schema.Types.ObjectId,
-
+        ref: 'DayManagement'
     }
 }, {timestamps: {createdAt: 'createdAt', updatedAt: 'updatedAt'}});
 

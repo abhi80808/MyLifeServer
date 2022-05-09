@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const verifyToken = require('../middleware/auth');
 const SelfTransferLog = require('../models/SelfTransferLog');
+const DayManagement = require('../models/DayManagement');
 
 const router = express.Router();
 
@@ -18,17 +19,19 @@ router.post("/signup", async (req, res) => {
         bcrypt.hash(userData['password'], salt, async (err, hash) => {
             userData['password'] = hash;
             const selfTransferLog = new SelfTransferLog();
-            await selfTransferLog.save().then(async (data) => {
-                const finance = new Finance({ selfTransferLog });
-                await finance.save().then(async (data) => {
-                    const user = new User({
-                        ...userData,
-                        finance: data._id
-                    });
-                    await user.save().then((data) => {
-                        return res.status(201).send(data);
+            await selfTransferLog.save().then(async (selfTransferLogData) => {
+                const finance = new Finance({ selfTransferLog: selfTransferLogData._id });
+                await finance.save().then(async (financeData) => {
+                    const dayManagement = new DayManagement();
+                    await dayManagement.save().then(async (dayManagementData) => {
+                        const user = new User({ ...userData, finance: financeData._id, dayManagement: dayManagementData._id });
+                        await user.save().then((data) => {
+                            return res.status(201).send(data);
+                        }).catch((err) => {
+                            return res.status(422).send(err);
+                        });
                     }).catch((err) => {
-                        return res.status(422).send(err);
+                        return res.status(422).json(err);
                     });
                 }).catch((err) => {
                     return res.status(422).json(err);

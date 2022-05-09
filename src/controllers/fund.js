@@ -14,10 +14,10 @@ router.get("/net-worth", verifyToken, async (req, res, next) => {
 
 router.post("/fund/storage/create", verifyToken, async (req, res, next) => {
     const fundStorage = new FundStorage(req.body);
-    fundStorage.save().then((data) => {
+    await fundStorage.save().then(async (fundStorageData) => {
         const finance = req.finance;
-        finance.funds.push(data._id);
-        finance.save().catch((err) => {
+        finance.funds.push(fundStorageData._id);
+        await finance.save().catch((err) => {
             console.log(err);
         });
         return res.status(200).json(data);
