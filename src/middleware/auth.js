@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const Finance = require('../models/Finance');
+const DayManagement = require('../models/DayManagement');
 
 module.exports = verifyToken = async (req, res, next) => {
     const token = req.headers.authorization;
@@ -22,6 +23,12 @@ module.exports = verifyToken = async (req, res, next) => {
             path: "funds",
             select: "-__v"
         }, {path: "selfTransferLog", select: "-__v"}]);
+        req.dayManagement = await DayManagement.findOne({_id: req.user.dayManagement._id}).populate([
+            {
+                path: "dailyTasks",
+                select: "-__v"
+            }
+        ]);
     });
     next();
 }

@@ -20,7 +20,20 @@ router.post("/dailyTask/add", verifyToken, async (req, res, next) => {
 
 router.put("/dailyTask/updateCompletionStatus", verifyToken, async (req, res, next) => {
     const {dailyTaskId, taskSNo, completionStatus} = req.query;
-    return res.json({m:"route hit"});
-})
+    const dayManagement = req.dayManagement;
+    let dailyTask = {};
+    dayManagement['dailyTasks'].every(dt => {
+        if(dt.id == dailyTaskId) {
+            dailyTask = dt;
+            return false;
+        }
+        return true;
+    });
+    const taskIndex = dailyTask.tasks.findIndex((task => task.sNo == taskSNo));
+    dailyTask.tasks[taskIndex].completionStatus = completionStatus;
+    await dailyTask.save().then(() => {
+        return res.status(200).json({message: "Task completion status updated successfully!!"});
+    });
+});
 
 module.exports = router;
