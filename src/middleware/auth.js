@@ -5,30 +5,35 @@ const DayManagement = require('../models/DayManagement');
 
 module.exports = verifyToken = async (req, res, next) => {
     const token = req.headers.authorization;
-    if(!token) return res.status(401).json({message: "You are not authorized to perform this task"});
-    const username = jwt.verify(token, 'private')['data'];
-    await User.findOne({username}).populate([{
-        path: "finance",
-        select: "-__v",
-        populate: {
-            path: "funds",
-            select: "-_id -__v"
-        }
-    },{
-        path: "dayManagement",
-        select: "-__v"
-    }]).then(async (user) => {
-        req.user = user;
-        req.finance = await Finance.findOne({_id: req.user.finance._id}).populate([{
-            path: "funds",
-            select: "-__v"
-        }, {path: "selfTransferLog", select: "-__v"}]);
-        req.dayManagement = await DayManagement.findOne({_id: req.user.dayManagement._id}).populate([
-            {
-                path: "dailyTasks",
-                select: "-__v"
+    if (!token) return res.status(401).json({ message: "You are not authorized to perform this task" });
+    try {
+        const username = jwt.verify(token, 'private')['data'];
+        await User.findOne({ username }).populate([{
+            path: "finance",
+            select: "-__v",
+            populate: {
+                path: "funds",
+                select: "-_id -__v"
             }
-        ]);
-    });
+        }, {
+            path: "dayManagement",
+            select: "-__v"
+        }]).then(async (user) => {
+            req.user = user;
+            req.finance = await Finance.findOne({ _id: req.user.finance._id }).populate([{
+                path: "funds",
+                select: "-__v"
+            }, { path: "selfTransferLog", select: "-__v" }]);
+            req.dayManagement = await DayManagement.findOne({ _id: req.user.dayManagement._id }).populate([
+                {
+                    path: "dailyTasks",
+                    select: "-__v"
+                }
+            ]);
+        });
+    }
+    catch (e) {
+        return res.status(404).json(e);
+    }
     next();
 }
