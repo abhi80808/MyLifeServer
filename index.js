@@ -6,6 +6,7 @@ const body_parser = require('body-parser');
 const authRoutes = require('./src/controllers/auth');
 const fundRoutes = require('./src/controllers/fund');
 const dailyTaskRoutes = require('./src/controllers/dailyTask');
+const dayManagementRoutes = require('./src/controllers/dayManagement');
 
 const app = express();
 
@@ -27,6 +28,7 @@ app.use(cors(corsOptions));
 app.use("/", authRoutes);
 app.use("/", fundRoutes);
 app.use("/", dailyTaskRoutes);
+app.use("/", dayManagementRoutes);
 
 app.get("*", (req, res) => {
     res.status(404).send("Error 404! not found");
