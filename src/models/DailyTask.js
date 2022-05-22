@@ -7,6 +7,11 @@ const DailyTaskSchema = new Schema({
         type: Number,
         unique: true
     },
+    dayManagementId: {
+        type: Schema.Types.ObjectId,
+        ref: "DayManagements",
+        required: true
+    },
     title: {
         type: String,
         required: true
@@ -29,25 +34,26 @@ const DailyTaskSchema = new Schema({
                 default: false
             },
             remarks: {
-                type: String
+                type: String,
+                default: ""
             }
         }
     ]
-}, {timestamps: {createdAt: 'createdAt', updatedAt: 'updatedAt'}});
+}, { timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' } });
 
-DailyTaskSchema.pre('save', async function() {
+DailyTaskSchema.pre('save', async function () {
     // Don't increment if this is NOT a newly created document
-    if(!this.isNew) return;
+    if (!this.isNew) return;
 
     const id = await CounterModel.increment('DailyTask');
     this.id = id;
 });
 
-DailyTaskSchema.methods.toJSON = function() {
+DailyTaskSchema.methods.toJSON = function () {
     var obj = this.toObject();
     delete obj._id;
     delete obj.__v;
     return obj;
-   }
+}
 
 module.exports = mongoose.model("DailyTask", DailyTaskSchema);
