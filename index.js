@@ -52,6 +52,6 @@ app.patch("*", (req, res) => {
 });
 
 const PORT = process.env.PORT || 2600;
-app.listen(port, () => {
+app.listen(PORT, () => {
     console.log("server is up and running on port 2600");
 });
