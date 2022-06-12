@@ -12,8 +12,9 @@ const app = express();
 
 app.use(body_parser.json());
 
+const DB_URL = process.env.DB_URL || "mongodb://localhost:27017/MyLife";
 mongoose
-    .connect("mongodb://localhost:27017/MyLife", { useNewUrlParser: true })
+    .connect(DB_URL, { useNewUrlParser: true })
     .then(() => {
         console.log("Connected to Database");
     })
@@ -50,6 +51,7 @@ app.patch("*", (req, res) => {
     res.status(404).send("Error 404! not found");
 });
 
-app.listen(2600, () => {
+const PORT = process.env.PORT || 2600;
+app.listen(port, () => {
     console.log("server is up and running on port 2600");
 });
