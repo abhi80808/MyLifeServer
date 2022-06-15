@@ -19,8 +19,9 @@ mongoose
         console.log("Connected to Database");
     })
 
+const CORS_ORIGIN = process.env.CORS_ORIGIN || ['http://172.16.58.76:2500', 'http://192.168.0.111:2500'];
 var corsOptions = {
-    origin: ['http://172.16.58.76:2500', 'http://192.168.0.111:2500'],
+    origin: CORS_ORIGIN,
     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 }
 
