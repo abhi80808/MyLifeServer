@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const Finance = require('../models/Finance');
 const DayManagement = require('../models/DayManagement');
+const Goal = require('../models/Goal');
 
 module.exports = verifyToken = async (req, res, next) => {
     const token = req.headers.authorization;
@@ -18,6 +19,9 @@ module.exports = verifyToken = async (req, res, next) => {
         }, {
             path: "dayManagement",
             select: "-__v"
+        }, {
+            path: "goals",
+            select: "-__v"
         }]).then(async (user) => {
             req.user = user;
             req.finance = await Finance.findOne({ _id: req.user.finance._id }).populate([{
@@ -30,6 +34,15 @@ module.exports = verifyToken = async (req, res, next) => {
                     select: "-__v"
                 }
             ]);
+            if(!req.user.goals) {
+                const goal = new Goal();
+                await goal.save().then(async (g) => {
+                    user.goals = g._id;
+                    await user.save();
+                    req.user = user;
+                });
+            }
+            req.goals = await Goal.findOne({ _id: req.user.goals._id });
         });
     }
     catch (e) {

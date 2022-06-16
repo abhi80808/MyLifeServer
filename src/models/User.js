@@ -36,6 +36,10 @@ const UserSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Finance'
     },
+    goals: {
+        type: Schema.Types.ObjectId,
+        ref: 'Goal'
+    },
     dayManagement: {
         type: Schema.Types.ObjectId,
         ref: 'DayManagement'
