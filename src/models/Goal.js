@@ -7,30 +7,28 @@ const GoalSchema = new Schema({
         type: Number,
         unique: true
     },
-    shortTerm: [
-        {
-            title: { type: String, required: true },
-            deadline: { type: Date, required: true },
-            completionStatus: { type: Boolean, required: true, default: false },
-            remarks: { type: String, default: "" }
-        }
-    ],
-    midTerm: [
-        {
-            title: { type: String, required: true },
-            deadline: { type: Date, required: true },
-            completionStatus: { type: Boolean, required: true, default: false },
-            remarks: { type: String, default: "" }
-        }
-    ],
-    longTerm: [
-        {
-            title: { type: String, required: true },
-            deadline: { type: Date, required: true },
-            completionStatus: { type: Boolean, required: true, default: false },
-            remarks: { type: String, default: "" }
-        }
-    ]
+    goalManagementId: {
+        type: Schema.Types.ObjectId,
+        ref: "GoalManagement",
+        required: true
+    },
+    title: {
+        type: String,
+        required: true
+    },
+    deadline: {
+        type: Date,
+        required: true
+    },
+    completionStatus: {
+        type: Boolean,
+        required: true,
+        default: false
+    },
+    remarks: {
+        type: String,
+        default: ""
+    }
 }, { timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' } });
 
 GoalSchema.pre('save', async function () {
