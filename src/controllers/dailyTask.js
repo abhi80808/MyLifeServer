@@ -86,8 +86,23 @@ router.delete("/dailyTasks", verifyToken, async (req, res, next) => {
     })
 })
 
-router.delete("/dailyTasks/subTask", verifyToken, (req, res, next) => {
-    return res.status(200).send("sub");
-})
+// router.delete("/dailyTasks/subTask", verifyToken, async (req, res, next) => {
+//     const { dailyTaskId, taskSno } = req.query;
+//     const dayManagement = req.dayManagement;
+//     await DailyTask.findOne({ id: dailyTaskId, dayManagementId: dayManagement._id }).then(async (dt) => {
+//         if (!dt) return res.status(404).json({ message: "Daily Task Not found" });
+//         let subTaskIndex = -1;
+//         for (let i = 0; i < dt.tasks.length; i++) {
+//             if (dt.tasks[i].sNo == taskSno) {
+//                 subTaskIndex = i;
+//                 break;
+//             }
+//         }
+//         dt.tasks.splice(subTaskIndex, 1);
+//         await dt.save().then(() => {
+//             return res.status(200).json({ message: "Sub Task Deleted successfully!!" });
+//         })
+//     });
+// })
 
 module.exports = router;
