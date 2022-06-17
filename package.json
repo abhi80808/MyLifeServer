@@ -1,6 +1,6 @@
 {
   "name": "my-life-api",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "This is the server side of my life project",
   "main": "index.js",
   "scripts": {
